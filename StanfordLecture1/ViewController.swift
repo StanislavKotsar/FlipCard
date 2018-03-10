@@ -9,9 +9,12 @@
 import UIKit
 
 class ViewController: UIViewController {
-    lazy var game = Concetration(numberOfPairsOfCards: (buttonsCollection.count + 1) / 2 )
+    lazy var game = Concetration(numberOfPairsOfCards:  numberOfPairsOfCards)
     @IBOutlet var buttonsCollection: [UIButton]!
     @IBOutlet weak var label: UILabel!
+    var numberOfPairsOfCards: Int {
+        return (buttonsCollection.count + 1) / 2
+    }
     var flipsCount = 0 {
         didSet {
             label.text = "Flips: \(flipsCount)"
@@ -50,8 +53,7 @@ class ViewController: UIViewController {
     
     func emoji (for card: Card) -> String {
         if emoji[card.identifier] == nil, emojiCollection.count > 0 {
-            let randomIndex = Int(arc4random_uniform(UInt32(emojiCollection.count)))
-            emoji[card.identifier] = emojiCollection.remove(at: randomIndex)
+            emoji[card.identifier] = emojiCollection.remove(at: emojiCollection.count.arc4random)
         }
         return emoji[card.identifier] ?? "?"
     }
@@ -68,7 +70,6 @@ class ViewController: UIViewController {
                         button.setTitle("", for: .normal)
                         button.backgroundColor =  #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
                 }
-                
                 self.emojiCollection = ["🎃", "👻", "🍆", "💩", "🦄", "🍄", "🌏", "🍓", "🌯", "🍑", "🌶", "🏀", "🎲", "🚽", "💈", "🎾"]
                 
                 self.emoji = [Int:String]()
@@ -84,4 +85,16 @@ class ViewController: UIViewController {
 
 }
     
+}
+
+extension Int {
+    var arc4random: Int {
+        if self > 0 {
+          return  Int(arc4random_uniform(UInt32(self)))
+        } else if self < 0 {
+            return -Int(arc4random_uniform(UInt32(abs(self))))
+        } else {
+            return 0
+        }
+    }
 }
